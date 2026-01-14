@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prozentrechnen Trainer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- iPad / iPhone: etwas mehr "App-Gefühl" -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#2563eb" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #dbeafe 0, #eff6ff 45%, #e5e7eb 100%);
+    }
+
+    .app-shell {
+      background: #ffffff;
+      max-width: 520px;
+      width: 100%;
+      margin: 16px;
+      padding: 24px 20px;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0 0 4px;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      font-size: 0.95rem;
+      color: #6b7280;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: #4b5563;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background: #f9fafb;
+    }
+
+    select:focus, input[type="number"]:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+      background: #ffffff;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .card {
+      padding: 14px 14px 10px;
+      border-radius: 12px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      margin-bottom: 16px;
+    }
+
+    .question-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #2563eb;
+      margin-bottom: 4px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #111827;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .answer-row input[type="number"] {
+      flex: 1;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease, opacity 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+      transform: translateY(-1px);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    .feedback {
+      min-height: 20px;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .feedback.ok {
+      color: #15803d;
+    }
+
+    .feedback.error {
+      color: #b91c1c;
+    }
+
+    .stats {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px dashed #e5e7eb;
+      font-size: 0.85rem;
+      color: #4b5563;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .pill {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .start-screen {
+      text-align: center;
+      padding: 12px 4px 8px;
+    }
+
+    .start-emoji {
+      font-size: 2.4rem;
+      margin-bottom: 4px;
+    }
+
+    .start-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .start-text {
+      font-size: 0.95rem;
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+
+    .start-meta {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 10px;
+    }
+
+    .trainer {
+      margin-top: 16px;
+      border-top: 1px dashed #e5e7eb;
+      padding-top: 14px;
+      display: none; /* wird nach Klick auf Start eingeblendet */
+    }
+
+    .teacher-note {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-align: right;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="badge">Prozent · Training</div>
+
+    <!-- Startbildschirm -->
+    <div id="startScreen" class="start-screen">
+      <div class="start-emoji">📊</div>
+      <div class="start-title">Prozentrechnen Trainer</div>
+      <p class="start-text">
+        Übe Prozentrechnungen mit zufälligen Aufgaben. Wähle den Aufgabentyp oder lass dich überraschen
+        – dann antworte so genau wie möglich.
+      </p>
+      <button id="startBtn" class="btn-primary" style="padding: 12px 22px; font-size: 1rem;">
+        ▶️ Training starten
+      </button>
+      <div class="start-meta">
+        Tippe nach dem Öffnen im Browser auf das <strong>Teilen-Symbol</strong> und dann auf
+        <strong>„Zum Home-Bildschirm“</strong>, um die App als Icon zu speichern.
+      </div>
+    </div>
+
+    <!-- Eigentliche Trainer-App -->
+    <div id="trainer" class="trainer">
+      <h1>Prozentrechnen</h1>
+      <p class="subtitle">Wähle einen Aufgabentyp oder bleib bei „Gemischt“.</p>
+
+      <div class="field">
+        <label for="typeSelect">Aufgabentyp</label>
+        <select id="typeSelect">
+          <option value="mixed">Gemischt (alle Typen)</option>
+          <option value="part">Anteil berechnen (p % von G)</option>
+          <option value="rate">Prozentsatz berechnen (p)</option>
+          <option value="base">Grundwert berechnen (G)</option>
+        </select>
+        <div class="hint">
+          Tipp: Als Lehrkraft kannst du einen Typ wählen, den sie gerade üben sollen.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="question-label">Aktuelle Aufgabe</div>
+        <div id="question" class="question-text">
+          ...
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="answerInput">Deine Antwort</label>
+        <div class="answer-row">
+          <input id="answerInput" type="number" step="0.1" />
+          <span id="answerUnit"></span>
+        </div>
+        <div class="hint" id="hintText"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-primary" id="checkBtn">
+          ✅ Prüfen
+        </button>
+        <button class="btn-secondary" id="nextBtn">
+          ⏭️ Nächste Aufgabe
+        </button>
+      </div>
+
+      <div id="feedback" class="feedback"></div>
+
+      <div class="stats">
+        <span><strong>Punkte:</strong> <span id="score">0</span> / <span id="total">0</span></span>
+        <span class="pill"><span id="percentage">0</span> % richtig</span>
+      </div>
+
+      <div class="teacher-note">
+        Entwickelt mit ChatGPT · Version für den Unterricht
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const startScreen = document.getElementById('startScreen');
+    const startBtn = document.getElementById('startBtn');
+    const trainerEl = document.getElementById('trainer');
+
+    const typeSelect = document.getElementById('typeSelect');
+    const questionEl = document.getElementById('question');
+    const answerInput = document.getElementById('answerInput');
+    const answerUnitEl = document.getElementById('answerUnit');
+    const hintTextEl = document.getElementById('hintText');
+    const checkBtn = document.getElementById('checkBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const feedbackEl = document.getElementById('feedback');
+    const scoreEl = document.getElementById('score');
+    const totalEl = document.getElementById('total');
+    const percentageEl = document.getElementById('percentage');
+
+    let currentProblem = null;
+    let score = 0;
+    let total = 0;
+    let alreadyChecked = false;
+
+    const PROBLEM_TYPES = ['part', 'rate', 'base'];
+
+    function randomFromArray(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function roundForDisplay(value) {
+      return Number.isInteger(value) ? value : value.toFixed(1);
+    }
+
+    function generateProblem() {
+      feedbackEl.textContent = '';
+      feedbackEl.className = 'feedback';
+      answerInput.value = '';
+      alreadyChecked = false;
+
+      let type = typeSelect.value;
+      if (type === 'mixed') {
+        type = randomFromArray(PROBLEM_TYPES);
+      }
+
+      let p, G, W;
+      if (type === 'part') {
+        p = randomFromArray([5, 10, 12.5, 20, 25, 30, 40, 50]);
+        G = randomFromArray([40, 80, 100, 120, 160, 200, 240, 320, 400, 500]);
+        W = G * p / 100;
+      } else if (type === 'rate') {
+        G = randomFromArray([80, 100, 120, 160, 200, 250, 400]);
+        const possibleP = [10, 12.5, 20, 25, 30, 40, 50];
+        p = randomFromArray(possibleP);
+        W = G * p / 100;
+      } else {
+        p = randomFromArray([10, 12.5, 20, 25, 30, 40, 50]);
+        const base = randomFromArray([80, 100, 120, 160, 200, 240, 400]);
+        G = base;
+        W = G * p / 100;
+      }
+
+      currentProblem = { type, p, G, W };
+
+      let text = '';
+      let unit = '';
+      let hintText = '';
+
+      if (type === 'part') {
+        text = `Berechne: ${p} % von ${G}.`;
+        unit = '';
+        hintText = 'Rechnung: (Prozentsatz ÷ 100) × Grundwert → W = p/100 · G';
+      } else if (type === 'rate') {
+        text = `Wie viel Prozent sind ${roundForDisplay(W)} von ${G}?`;
+        unit = '%';
+        hintText = 'Rechnung: (Anteil ÷ Grundwert) × 100 → p = W/G · 100';
+      } else if (type === 'base') {
+        text = `${roundForDisplay(W)} sind ${p} % von wie viel?`;
+        unit = '';
+        hintText = 'Rechnung: Anteil ÷ (Prozentsatz ÷ 100) → G = W / (p/100)';
+      }
+
+      questionEl.textContent = text;
+      answerUnitEl.textContent = unit;
+      hintTextEl.textContent = hintText;
+
+      answerInput.focus();
+    }
+
+    function getCorrectAnswer() {
+      if (!currentProblem) return null;
+      const { type, p, G, W } = currentProblem;
+
+      if (type === 'part') {
+        return W;
+      } else if (type === 'rate') {
+        return (W / G) * 100;
+      } else if (type === 'base') {
+        return W / (p / 100);
+      }
+      return null;
+    }
+
+    function checkAnswer() {
+      if (!currentProblem) return;
+
+      const raw = answerInput.value.trim().replace(',', '.');
+      const value = parseFloat(raw);
+      if (isNaN(value)) {
+        feedbackEl.textContent = 'Bitte gib zuerst eine Zahl ein.';
+        feedbackEl.className = 'feedback error';
+        return;
+      }
+
+      const correct = getCorrectAnswer();
+      const diff = Math.abs(value - correct);
+
+      if (!alreadyChecked) {
+        total++;
+        totalEl.textContent = total;
+      }
+
+      if (diff <= 0.05 * Math.max(1, Math.abs(correct))) {
+        if (!alreadyChecked) {
+          score++;
+          scoreEl.textContent = score;
+        }
+        feedbackEl.textContent = '✅ Richtig! Gut gemacht.';
+        feedbackEl.className = 'feedback ok';
+      } else {
+        const suffix = currentProblem.type === 'rate' ? ' %' : '';
+        feedbackEl.textContent =
+          `❌ Leider falsch. Richtige Lösung: ${roundForDisplay(correct)}${suffix}.`;
+        feedbackEl.className = 'feedback error';
+      }
+
+      alreadyChecked = true;
+      percentageEl.textContent = total > 0 ? Math.round((score / total) * 100) : 0;
+    }
+
+    // Start-Button zeigt den Trainer an und erzeugt die erste Aufgabe
+    startBtn.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      trainerEl.style.display = 'block';
+      generateProblem();
+    });
+
+    checkBtn.addEventListener('click', checkAnswer);
+    nextBtn.addEventListener('click', generateProblem);
+    typeSelect.addEventListener('change', generateProblem);
+    answerInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        checkAnswer();
+      }
+    });
+  </script>
+</body>
+</html>
